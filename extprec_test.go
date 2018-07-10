@@ -3,6 +3,13 @@ package extprec
 import "testing"
 
 func TestAdd(t *testing.T) {
+	t.Run("edge", edgeAdd)
+	t.Run("carryOut==0", carryOutZero)
+	t.Run("carryOut==1,32-bit", carryOutOne32)
+	t.Run("carryOut==1,64-bit", carryOutOne64)
+}
+
+func edgeAdd(t *testing.T) {
 	// Edge cases with extremely large and small values
 	edge := []struct {
 		x, y, carry, sum, carryOut uint64
@@ -37,12 +44,14 @@ func TestAdd(t *testing.T) {
 				uint(c.sum), uint(c.carryOut))
 		}
 	}
+}
 
-	// Sums where carry == 0
-	var (
-		valid64  uint64 = (1<<64 - 1) / 2
-		valid32  uint64 = (1<<32 - 1) / 2
-		interval uint64 = valid64 / 256
+func carryOutZero(t *testing.T) {
+	// Sums where carryOut == 0
+	const (
+		valid64  = (1<<64 - 1) / 2
+		valid32  = (1<<32 - 1) / 2
+		interval = valid64 / 256
 	)
 	for x := uint64(0); x < valid64; x += interval {
 		for y := uint64(0); y < valid64; y += interval {
@@ -74,14 +83,18 @@ func TestAdd(t *testing.T) {
 			}
 		}
 	}
+}
 
-	// Sums where carry != 0
+func carryOutOne32(t *testing.T) {
+	// Sums where carryOut == 1
 	// 32-bit
-	halfRange := uint64((1 << 32) / 2)
-	valid32 = 1<<32 - 1
-	interval = halfRange / 256
-	for x := valid32 - interval + 1; x >= halfRange; x -= interval {
-		for y := valid32 - interval + 1; y >= halfRange; y -= interval {
+	const (
+		halfRange = (1 << 32) / 2
+		valid32   = 1<<32 - 1
+		interval  = halfRange / 256
+	)
+	for x := uint64(valid32 - interval + 1); x >= halfRange; x -= interval {
+		for y := uint64(valid32 - interval + 1); y >= halfRange; y -= interval {
 			if sum, carryOut := Add32(uint32(x), uint32(y), 0); sum != uint32(x+y+0) && carryOut != 1 {
 				t.Errorf("Add32(0x%X, 0x%X, 0x%X) == (0x%X, 0x%X); want (0x%X, 0x%X)",
 					uint32(x), uint32(y), 0,
@@ -96,14 +109,18 @@ func TestAdd(t *testing.T) {
 			}
 		}
 	}
+}
 
-	// Sums where carry != 0
+func carryOutOne64(t *testing.T) {
+	// Sums where carryOut == 1
 	// 64-bit
-	halfRange = uint64((1 << 64) / 2)
-	valid64 = 1<<64 - 1
-	interval = halfRange / 256
-	for x := valid64 - interval + 1; x >= halfRange; x -= interval {
-		for y := valid64 - interval + 1; y >= halfRange; y -= interval {
+	const (
+		halfRange = (1 << 64) / 2
+		valid64   = 1<<64 - 1
+		interval  = halfRange / 256
+	)
+	for x := uint64(valid64 - interval + 1); x >= halfRange; x -= interval {
+		for y := uint64(valid64 - interval + 1); y >= halfRange; y -= interval {
 			if sum, carryOut := Add64(x, y, 0); sum != x+y+0 && carryOut != 0 {
 				t.Errorf("Add64(0x%X, 0x%X, 0x%X) == (0x%X, 0x%X); want (0x%X, 0x%X)",
 					x, y, 0,
