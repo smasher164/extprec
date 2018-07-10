@@ -1,4 +1,4 @@
-This package provides a portable implementation of extended precision integer arithmetic operations in Go. Specifically, it implements the functions outlined for the math/bits package in [#24813](golang.org/issue/24813) as follows:
+This package provides a portable implementation of extended precision integer arithmetic operations in Go. Specifically, it implements the functions outlined for the math/bits package in [#24813](https://golang.org/issue/24813) as follows:
 ```
 // Add with carry
 // The carry inputs are assumed to be 0 or 1; otherwise behavior undefined.
