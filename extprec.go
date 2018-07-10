@@ -22,9 +22,7 @@
 
 package extprec
 
-import "math/bits"
-
-const UintSize = bits.UintSize
+import . "math/bits"
 
 // Add returns the sum and carry-out bit (0 or 1) of
 // x, y, and a carry-in bit (assumed to be 0 or 1).
@@ -189,7 +187,7 @@ func Div32(hi, lo, x uint32) (quo, rem uint32) {
 func Div64(hi, lo, x uint64) (quo, rem uint64) {
 	// See "Hacker's Delight", Ch. 9-4: Unsigned Long Division
 	const b = 1 << 32
-	s := bits.LeadingZeros64(x)
+	s := LeadingZeros64(x)
 	us := uint64(s)
 	// Normalize divisor.
 	x = x << us
