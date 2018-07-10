@@ -1,8 +1,6 @@
 package extprec
 
-import (
-	"testing"
-)
+import "testing"
 
 func TestAdd(t *testing.T) {
 	// Edge cases with extremely large and small values

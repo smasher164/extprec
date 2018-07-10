@@ -161,7 +161,7 @@ func Mul64(x, y uint64) (hi, lo uint64) {
 
 // Div returns the quotient and remainder of (hi || lo) and x,
 // where hi and lo hold the most significant and least
-// significant bits of the divisor, respectively.
+// significant bits of the dividend.
 func Div(hi, lo, x uint) (quo, rem uint) {
 	if UintSize == 32 {
 		q32, r32 := Div32(uint32(hi), uint32(lo), uint32(x))
@@ -173,7 +173,7 @@ func Div(hi, lo, x uint) (quo, rem uint) {
 
 // Div32 returns the 32-bit quotient and remainder of (hi || lo) and x,
 // where hi and lo hold the most significant and least
-// significant 32 bits of the divisor, respectively.
+// significant 32 bits of the dividend.
 func Div32(hi, lo, x uint32) (quo, rem uint32) {
 	y := (uint64(hi) << 32) | uint64(lo)
 	quo = uint32(y / uint64(x))
@@ -183,7 +183,7 @@ func Div32(hi, lo, x uint32) (quo, rem uint32) {
 
 // Div64 returns the 64-bit quotient and remainder of (hi || lo) and x,
 // where hi and lo hold the most significant and least
-// significant 64 bits of the divisor, respectively.
+// significant 64 bits of the dividend.
 func Div64(hi, lo, x uint64) (quo, rem uint64) {
 	// See "Hacker's Delight", Ch. 9-4: Unsigned Long Division
 	const b = 1 << 32
