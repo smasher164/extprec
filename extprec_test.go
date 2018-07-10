@@ -1,6 +1,8 @@
 package extprec
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestAdd(t *testing.T) {
 	t.Run("edge", edgeAdd)
@@ -56,26 +58,26 @@ func carryOutZero(t *testing.T) {
 	for x := uint64(0); x < valid64; x += interval {
 		for y := uint64(0); y < valid64; y += interval {
 			if x < valid32 && y < valid32 {
-				if sum, carryOut := Add32(uint32(x), uint32(y), 0); sum != uint32(x+y+0) && carryOut != 0 {
+				if sum, carryOut := Add32(uint32(x), uint32(y), 0); sum != uint32(x+y+0) || carryOut != 0 {
 					t.Errorf("Add32(0x%X, 0x%X, 0x%X) == (0x%X, 0x%X); want (0x%X, 0x%X)",
 						uint32(x), uint32(y), 0,
 						sum, carryOut,
 						uint32(x+y+0), 0)
 				}
-				if sum, carryOut := Add32(uint32(x), uint32(y), 1); sum != uint32(x+y+1) && carryOut != 0 {
+				if sum, carryOut := Add32(uint32(x), uint32(y), 1); sum != uint32(x+y+1) || carryOut != 0 {
 					t.Errorf("Add32(0x%X, 0x%X, 0x%X) == (0x%X, 0x%X); want (0x%X, 0x%X)",
 						uint32(x), uint32(y), 1,
 						sum, carryOut,
 						uint32(x+y+1), 0)
 				}
 			}
-			if sum, carryOut := Add64(x, y, 0); sum != x+y+0 && carryOut != 0 {
+			if sum, carryOut := Add64(x, y, 0); sum != x+y+0 || carryOut != 0 {
 				t.Errorf("Add64(0x%X, 0x%X, 0x%X) == (0x%X, 0x%X); want (0x%X, 0x%X)",
 					x, y, 0,
 					sum, carryOut,
 					x+y+0, 0)
 			}
-			if sum, carryOut := Add64(x, y, 1); sum != x+y+1 && carryOut != 0 {
+			if sum, carryOut := Add64(x, y, 1); sum != x+y+1 || carryOut != 0 {
 				t.Errorf("Add64(0x%X, 0x%X, 0x%X) == (0x%X, 0x%X); want (0x%X, 0x%X)",
 					x, y, 1,
 					sum, carryOut,
@@ -95,13 +97,13 @@ func carryOutOne32(t *testing.T) {
 	)
 	for x := uint32(valid32 - interval + 1); x >= halfRange; x -= interval {
 		for y := uint32(valid32 - interval + 1); y >= halfRange; y -= interval {
-			if sum, carryOut := Add32(x, y, 0); sum != x+y+0 && carryOut != 1 {
+			if sum, carryOut := Add32(x, y, 0); sum != x+y+0 || carryOut != 1 {
 				t.Errorf("Add32(0x%X, 0x%X, 0x%X) == (0x%X, 0x%X); want (0x%X, 0x%X)",
 					x, y, 0,
 					sum, carryOut,
 					x+y+0, 1)
 			}
-			if sum, carryOut := Add32(x, y, 1); sum != x+y+1 && carryOut != 1 {
+			if sum, carryOut := Add32(x, y, 1); sum != x+y+1 || carryOut != 1 {
 				t.Errorf("Add32(0x%X, 0x%X, 0x%X) == (0x%X, 0x%X); want (0x%X, 0x%X)",
 					x, y, 1,
 					sum, carryOut,
@@ -121,13 +123,13 @@ func carryOutOne64(t *testing.T) {
 	)
 	for x := uint64(valid64 - interval + 1); x >= halfRange; x -= interval {
 		for y := uint64(valid64 - interval + 1); y >= halfRange; y -= interval {
-			if sum, carryOut := Add64(x, y, 0); sum != x+y+0 && carryOut != 0 {
+			if sum, carryOut := Add64(x, y, 0); sum != x+y+0 || carryOut != 1 {
 				t.Errorf("Add64(0x%X, 0x%X, 0x%X) == (0x%X, 0x%X); want (0x%X, 0x%X)",
 					x, y, 0,
 					sum, carryOut,
 					x+y+0, 0)
 			}
-			if sum, carryOut := Add64(x, y, 1); sum != x+y+1 && carryOut != 0 {
+			if sum, carryOut := Add64(x, y, 1); sum != x+y+1 || carryOut != 1 {
 				t.Errorf("Add64(0x%X, 0x%X, 0x%X) == (0x%X, 0x%X); want (0x%X, 0x%X)",
 					x, y, 1,
 					sum, carryOut,
