@@ -93,19 +93,19 @@ func carryOutOne32(t *testing.T) {
 		valid32   = 1<<32 - 1
 		interval  = halfRange / 256
 	)
-	for x := uint64(valid32 - interval + 1); x >= halfRange; x -= interval {
-		for y := uint64(valid32 - interval + 1); y >= halfRange; y -= interval {
-			if sum, carryOut := Add32(uint32(x), uint32(y), 0); sum != uint32(x+y+0) && carryOut != 1 {
+	for x := uint32(valid32 - interval + 1); x >= halfRange; x -= interval {
+		for y := uint32(valid32 - interval + 1); y >= halfRange; y -= interval {
+			if sum, carryOut := Add32(x, y, 0); sum != x+y+0 && carryOut != 1 {
 				t.Errorf("Add32(0x%X, 0x%X, 0x%X) == (0x%X, 0x%X); want (0x%X, 0x%X)",
-					uint32(x), uint32(y), 0,
+					x, y, 0,
 					sum, carryOut,
-					uint32(x+y+0), 1)
+					x+y+0, 1)
 			}
-			if sum, carryOut := Add32(uint32(x), uint32(y), 1); sum != uint32(x+y+1) && carryOut != 1 {
+			if sum, carryOut := Add32(x, y, 1); sum != x+y+1 && carryOut != 1 {
 				t.Errorf("Add32(0x%X, 0x%X, 0x%X) == (0x%X, 0x%X); want (0x%X, 0x%X)",
-					uint32(x), uint32(y), 1,
+					x, y, 1,
 					sum, carryOut,
-					uint32(x+y+1), 1)
+					x+y+1, 1)
 			}
 		}
 	}
