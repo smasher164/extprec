@@ -80,7 +80,7 @@ func Sub(x, y, borrow uint) (difference, borrowOut uint) {
 	return uint(d64), uint(b64)
 }
 
-// Sub returns the 32-bit difference and borrow-out bit (0 or 1) of
+// Sub32 returns the 32-bit difference and borrow-out bit (0 or 1) of
 // x, y, and a borrow-in bit (assumed to be 0 or 1).
 func Sub32(x, y, borrow uint32) (difference, borrowOut uint32) {
 	difference = x - y - borrow
@@ -88,7 +88,7 @@ func Sub32(x, y, borrow uint32) (difference, borrowOut uint32) {
 	return
 }
 
-// Sub returns the 64-bit difference and borrow-out bit (0 or 1) of
+// Sub64 returns the 64-bit difference and borrow-out bit (0 or 1) of
 // x, y, and a borrow-in bit (assumed to be 0 or 1).
 func Sub64(x, y, borrow uint64) (difference, borrowOut uint64) {
 	// See "Hacker's Delight", Ch. 2-16: Double Length Add/Subtract
@@ -173,7 +173,7 @@ func Div(hi, lo, x uint) (quo, rem uint) {
 	return uint(q64), uint(r64)
 }
 
-// Div returns the 32-bit quotient and remainder of (hi || lo) and x,
+// Div32 returns the 32-bit quotient and remainder of (hi || lo) and x,
 // where hi and lo hold the most significant and least
 // significant 32 bits of the divisor, respectively.
 func Div32(hi, lo, x uint32) (quo, rem uint32) {
@@ -183,7 +183,7 @@ func Div32(hi, lo, x uint32) (quo, rem uint32) {
 	return
 }
 
-// Div returns the 64-bit quotient and remainder of (hi || lo) and x,
+// Div64 returns the 64-bit quotient and remainder of (hi || lo) and x,
 // where hi and lo hold the most significant and least
 // significant 64 bits of the divisor, respectively.
 func Div64(hi, lo, x uint64) (quo, rem uint64) {
