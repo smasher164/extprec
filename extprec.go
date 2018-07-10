@@ -65,7 +65,7 @@ func Add64(x, y, carry uint64) (sum, carryOut uint64) {
 	c := ((xlo & ylo) | ((xlo | ylo) & ^lo)) >> 31
 	hi := xhi + yhi + c
 	carryOut = ((xhi & yhi) | ((xhi | yhi) & ^hi)) >> 31
-	sum = (hi << 32) | lo
+	sum = (hi << 32) | (lo & 0xFFFFFFFF)
 	return
 }
 
@@ -108,7 +108,7 @@ func Sub64(x, y, borrow uint64) (difference, borrowOut uint64) {
 	b := ((^xlo & ylo) | (^(xlo ^ ylo) & lo)) >> 31
 	hi := xhi - yhi - b
 	borrowOut = ((^xhi & yhi) | (^(xhi ^ yhi) & hi)) >> 31
-	difference = (hi << 32) | lo
+	difference = (hi << 32) | (lo & 0xFFFFFFFF)
 	return
 }
 
