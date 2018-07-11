@@ -25,5 +25,3 @@ func Div(hi, lo, x uint) (quo, rem uint)
 func Div32(hi, lo, x uint32) (quo, rem uint32)
 func Div64(hi, lo, x uint64) (quo, rem uint64)
 ```
-
-I still need to add unit tests and hammer out bugs in the library, so feel free to file an issue!
