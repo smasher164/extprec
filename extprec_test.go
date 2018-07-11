@@ -141,6 +141,7 @@ func carryOutOne64(t *testing.T) {
 
 func TestSub(t *testing.T) {
 	t.Run("edge", edgeSub)
+	t.Run("borrowOut==0", borrowOutZero)
 }
 
 func edgeSub(t *testing.T) {
@@ -176,6 +177,45 @@ func edgeSub(t *testing.T) {
 				uint(c.x), uint(c.y), uint(c.borrow),
 				difference, borrowOut,
 				uint(c.difference), uint(c.borrowOut))
+		}
+	}
+}
+
+func borrowOutZero(t *testing.T) {
+	// Differences where borrowOut == 0
+	const (
+		interval = (1<<64 - 1) / 256
+		xmax     = (1<<64 - 1) - interval
+		max32    = 1<<32 - 1
+	)
+	for x := uint64(1); x <= xmax; x += interval {
+		for y := uint64(0); y <= x-1; y += interval {
+			if x < max32 && y < max32 {
+				if difference, borrowOut := Sub32(uint32(x), uint32(y), 0); difference != uint32(x-y-0) || borrowOut != 0 {
+					t.Errorf("Sub32(0x%X, 0x%X, 0x%X) == (0x%X, 0x%X); want (0x%X, 0x%X)",
+						uint32(x), uint32(y), 0,
+						difference, borrowOut,
+						uint32(x-y-0), 0)
+				}
+				if difference, borrowOut := Sub32(uint32(x), uint32(y), 1); difference != uint32(x-y-1) || borrowOut != 0 {
+					t.Errorf("Sub32(0x%X, 0x%X, 0x%X) == (0x%X, 0x%X); want (0x%X, 0x%X)",
+						uint32(x), uint32(y), 1,
+						difference, borrowOut,
+						uint32(x-y-1), 0)
+				}
+			}
+			if difference, borrowOut := Sub64(x, y, 0); difference != x-y-0 || borrowOut != 0 {
+				t.Errorf("Sub64(0x%X, 0x%X, 0x%X) == (0x%X, 0x%X); want (0x%X, 0x%X)",
+					x, y, 0,
+					difference, borrowOut,
+					x-y-0, 0)
+			}
+			if difference, borrowOut := Sub64(x, y, 1); difference != x-y-1 || borrowOut != 0 {
+				t.Errorf("Sub64(0x%X, 0x%X, 0x%X) == (0x%X, 0x%X); want (0x%X, 0x%X)",
+					x, y, 1,
+					difference, borrowOut,
+					x-y-1, 0)
+			}
 		}
 	}
 }
