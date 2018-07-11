@@ -1,8 +1,30 @@
+// MIT License
+
+// Copyright (c) 2018 Akhil Indurti
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+//go:generate go run make_factors.go
+
 package extprec
 
-import (
-	"testing"
-)
+import "testing"
 
 func TestAdd(t *testing.T) {
 	t.Run("edge", edgeAdd)
@@ -267,6 +289,62 @@ func borrowOutOne64(t *testing.T) {
 					x, y, 1,
 					difference, borrowOut,
 					x-y-1, 1)
+			}
+		}
+	}
+}
+
+func TestMul32(t *testing.T) {
+	for _, f := range factors32 {
+		if f.rem == 0 {
+			hi, lo := Mul32(f.x, f.y)
+			if hi != f.hi || lo != f.lo {
+				t.Errorf("Mul32(0x%X, 0x%X) == (0x%X, 0x%X); want (0x%X, 0x%X)", f.x, f.y, hi, lo, f.hi, f.lo)
+			}
+		}
+	}
+}
+
+func TestMul64(t *testing.T) {
+	for _, f := range factors64 {
+		if f.rem == 0 {
+			hi, lo := Mul64(f.x, f.y)
+			if hi != f.hi || lo != f.lo {
+				t.Errorf("Mul64(0x%X, 0x%X) == (0x%X, 0x%X); want (0x%X, 0x%X)", f.x, f.y, hi, lo, f.hi, f.lo)
+			}
+		}
+	}
+}
+
+func TestDiv32(t *testing.T) {
+	for _, f := range factors32 {
+		if f.x != 0 {
+			quo, rem := Div32(f.hi, f.lo, f.x)
+			if quo != f.y || rem != f.rem {
+				t.Errorf("Div32(0x%X, 0x%X, 0x%X) == (0x%X, 0x%X); want (0x%X, 0x%X)", f.hi, f.lo, f.x, quo, rem, f.y, f.rem)
+			}
+		}
+		if f.y != 0 {
+			quo, rem := Div32(f.hi, f.lo, f.y)
+			if quo != f.x || rem != f.rem {
+				t.Errorf("Div32(0x%X, 0x%X, 0x%X) == (0x%X, 0x%X); want (0x%X, 0x%X)", f.hi, f.lo, f.y, quo, rem, f.x, f.rem)
+			}
+		}
+	}
+}
+
+func TestDiv64(t *testing.T) {
+	for _, f := range factors64 {
+		if f.x != 0 {
+			quo, rem := Div64(f.hi, f.lo, f.x)
+			if quo != f.y || rem != f.rem {
+				t.Errorf("Div64(0x%X, 0x%X, 0x%X) == (0x%X, 0x%X); want (0x%X, 0x%X)", f.hi, f.lo, f.x, quo, rem, f.y, f.rem)
+			}
+		}
+		if f.y != 0 {
+			quo, rem := Div64(f.hi, f.lo, f.y)
+			if quo != f.x || rem != f.rem {
+				t.Errorf("Div64(0x%X, 0x%X, 0x%X) == (0x%X, 0x%X); want (0x%X, 0x%X)", f.hi, f.lo, f.y, quo, rem, f.x, f.rem)
 			}
 		}
 	}

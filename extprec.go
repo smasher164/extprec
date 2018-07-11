@@ -22,9 +22,7 @@
 
 package extprec
 
-import (
-	. "math/bits"
-)
+import . "math/bits"
 
 // Add returns the sum and carry-out bit (0 or 1) of
 // x, y, and a carry-in bit (assumed to be 0 or 1).
