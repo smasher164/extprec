@@ -138,3 +138,44 @@ func carryOutOne64(t *testing.T) {
 		}
 	}
 }
+
+func TestSub(t *testing.T) {
+	t.Run("edge", edgeSub)
+}
+
+func edgeSub(t *testing.T) {
+	// Edge cases with extremely large and small values
+	edge := []struct {
+		x, y, borrow, difference, borrowOut uint64
+	}{
+		{0, 0, 0, 0, 0},
+		{0, 0, 1, 1<<64 - 1, 1},
+		{0, 1<<64 - 1, 0, 1, 1},
+		{0, 1<<64 - 1, 1, 0, 1},
+		{1<<64 - 1, 0xAAAAAAAAAAAAAAAA, 0, 0x5555555555555555, 0},
+		{1<<64 - 1, 0xAAAAAAAAAAAAAAAA, 1, 0x5555555555555554, 0},
+	}
+	for _, c := range edge {
+		d64, b64 := Sub64(c.x, c.y, c.borrow)
+		if d64 != c.difference || b64 != c.borrowOut {
+			t.Errorf("Sub64(0x%X, 0x%X, 0x%X) == (0x%X, 0x%X); want (0x%X, 0x%X)",
+				c.x, c.y, c.borrow,
+				d64, b64,
+				c.difference, c.borrowOut)
+		}
+		d32, b32 := Sub32(uint32(c.x), uint32(c.y), uint32(c.borrow))
+		if d32 != uint32(c.difference) || b32 != uint32(c.borrowOut) {
+			t.Errorf("Sub32(0x%X, 0x%X, 0x%X) == (0x%X, 0x%X); want (0x%X, 0x%X)",
+				uint32(c.x), uint32(c.y), uint32(c.borrow),
+				d32, b32,
+				uint32(c.difference), uint32(c.borrowOut))
+		}
+		difference, borrowOut := Sub(uint(c.x), uint(c.y), uint(c.borrow))
+		if difference != uint(c.difference) || borrowOut != uint(c.borrowOut) {
+			t.Errorf("Sub(0x%X, 0x%X, 0x%X) == (0x%X, 0x%X); want (0x%X, 0x%X)",
+				uint(c.x), uint(c.y), uint(c.borrow),
+				difference, borrowOut,
+				uint(c.difference), uint(c.borrowOut))
+		}
+	}
+}

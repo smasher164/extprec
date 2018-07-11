@@ -22,7 +22,9 @@
 
 package extprec
 
-import . "math/bits"
+import (
+	. "math/bits"
+)
 
 // Add returns the sum and carry-out bit (0 or 1) of
 // x, y, and a carry-in bit (assumed to be 0 or 1).
@@ -59,11 +61,11 @@ func Add64(x, y, carry uint64) (sum, carryOut uint64) {
 	ylo := y & 0xFFFFFFFF
 	yhi := y >> 32
 
-	lo := xlo + ylo + carry
+	lo := (xlo + ylo + carry) & 0xFFFFFFFF
 	c := ((xlo & ylo) | ((xlo | ylo) & ^lo)) >> 31
-	hi := xhi + yhi + c
+	hi := (xhi + yhi + c) & 0xFFFFFFFF
 	carryOut = ((xhi & yhi) | ((xhi | yhi) & ^hi)) >> 31
-	sum = (hi << 32) | (lo & 0xFFFFFFFF)
+	sum = (hi << 32) | lo
 	return
 }
 
@@ -102,11 +104,11 @@ func Sub64(x, y, borrow uint64) (difference, borrowOut uint64) {
 	ylo := y & 0xFFFFFFFF
 	yhi := y >> 32
 
-	lo := xlo - ylo - borrow
+	lo := (xlo - ylo - borrow) & 0xFFFFFFFF
 	b := ((^xlo & ylo) | (^(xlo ^ ylo) & lo)) >> 31
-	hi := xhi - yhi - b
+	hi := (xhi - yhi - b) & 0xFFFFFFFF
 	borrowOut = ((^xhi & yhi) | (^(xhi ^ yhi) & hi)) >> 31
-	difference = (hi << 32) | (lo & 0xFFFFFFFF)
+	difference = (hi << 32) | lo
 	return
 }
 
